@@ -11,7 +11,7 @@
             padding: 0;
             height: 100vh;
             text-align: center;
-            color: wheat;
+            color: #fff;
             font-size: 40px;
         }
         .h-1 button {
@@ -20,24 +20,32 @@
             font-weight: bold;
             padding: 1%;
             border-radius: 30px 30px;
-            margin-bottom: 20px; /* Added margin for space between button and webcam */
+            margin-bottom: 20px;
         }
         #webcam-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: auto; /* Adjust height as necessary */
-            margin-top: 20px; /* Added margin for space between button and webcam */
+            height: auto;
+            margin-top: 20px;
+        }
+        #label-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            margin-top: 50px;
+            font-size: 20px;
+            color: #fff;
         }
     </style>
 </head>
 <body>
-    <!-- Your website content goes here -->
     <div class="h-1">Teachable Machine Image Model <br>
         <button type="button" onclick="init()">Start</button>
-        <div id="webcam-container"></div> <!-- Moved inside the h-1 div -->
+        <div id="webcam-container"></div>
+        <div id="label-container"></div>
     </div>
-    <div id="label-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
@@ -53,21 +61,21 @@
             model = await tmImage.load(modelURL, metadataURL);
             maxPredictions = model.getTotalClasses();
 
-            const flip = true; // whether to flip the webcam
-            webcam = new tmImage.Webcam(200, 200, flip); // width, height, flip
-            await webcam.setup(); // request access to the webcam
+            const flip = true;
+            webcam = new tmImage.Webcam(200, 200, flip);
+            await webcam.setup();
             await webcam.play();
             window.requestAnimationFrame(loop);
 
             document.getElementById("webcam-container").appendChild(webcam.canvas);
             labelContainer = document.getElementById("label-container");
-            for (let i = 0; i < maxPredictions; i++) { // and class labels
+            for (let i = 0; i < maxPredictions; i++) {
                 labelContainer.appendChild(document.createElement("div"));
             }
         }
 
         async function loop() {
-            webcam.update(); // update the webcam frame
+            webcam.update();
             await predict();
             window.requestAnimationFrame(loop);
         }
